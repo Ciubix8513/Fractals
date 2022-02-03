@@ -1,11 +1,12 @@
 ﻿#version 430
 
 //=================================================================
-// ViewShaderData.glsl    
+// ViewShaderData.glsl
+// https://www.shadertoy.com/view/llcXDn by gPlatl
 //   v1.0 2016-12-06  initial release
 //   v1.1 2017-02-19  rearranged for easier coding
 // Display shader data like date, time, frameCount, runtime, fps, 
-//   resolution and mouse position.
+//   resolution and mouse position.https://github.com/Ciubix8513/Fractals/blob/master/RES/data.frag
 // Click and drag mouse button to display current mouse position.
 //=================================================================
 
