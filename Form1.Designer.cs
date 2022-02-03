@@ -37,6 +37,7 @@
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.glControl = new OpenTK.WinForms.GLControl();
+            this.shaderDataDisplayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -57,11 +58,11 @@
             // 
             this.reloadToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.calibrationToolStripMenuItem,
-            this.mainShaderToolStripMenuItem});
+            this.mainShaderToolStripMenuItem,
+            this.shaderDataDisplayToolStripMenuItem});
             this.reloadToolStripMenuItem.Name = "reloadToolStripMenuItem";
             this.reloadToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
             this.reloadToolStripMenuItem.Text = "Shaders";
-            
             // 
             // calibrationToolStripMenuItem
             // 
@@ -115,6 +116,13 @@
             this.glControl.Text = "glControl1";
             this.glControl.Load += new System.EventHandler(this.glControl_Load);
             // 
+            // shaderDataDisplayToolStripMenuItem
+            // 
+            this.shaderDataDisplayToolStripMenuItem.Name = "shaderDataDisplayToolStripMenuItem";
+            this.shaderDataDisplayToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.shaderDataDisplayToolStripMenuItem.Text = "Shader data display";
+            this.shaderDataDisplayToolStripMenuItem.Click += new System.EventHandler(this.shaderDataDisplayToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -142,6 +150,7 @@
         private System.Windows.Forms.ToolStripMenuItem calibrationToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mainShaderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
+        private System.Windows.Forms.ToolStripMenuItem shaderDataDisplayToolStripMenuItem;
     }
 }
 

@@ -3,7 +3,7 @@ out vec4 FragColor;
 
 layout(location = 0 ) uniform float iTime = 0;
 layout(location = 1)  uniform vec3 iResolution;
-
+layout(location = 3) uniform vec2 iMouse;
 
 // Created by inigo quilez - iq/2021
 

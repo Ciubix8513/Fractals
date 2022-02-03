@@ -19,11 +19,46 @@ namespace Fractals
         System.Diagnostics.Stopwatch stopwatch;
         bool paused = false;
         string currentShader;
+        bool tracking = false;
+        Vector2 position;
+        Vector2 prevM;
+        float sensetiity = 2.0f;
+        float zoom = 1000.0f;
+
+
 
         public Form1()
         {
             this.FormClosed += Form1_FormClosed;
+            position = new Vector2(0, 0);
+            prevM = new Vector2(0,0);
+            
             InitializeComponent();
+
+            glControl.MouseWheel += GlControl_MouseWheel;
+            glControl.MouseDown += GlControl_MouseDown;
+            glControl.MouseUp += GlControl_MouseUp;
+            glControl.MouseMove += GlControl_MouseMove;
+        }
+
+        private void GlControl_MouseWheel(object sender, MouseEventArgs e)
+        {
+            zoom += e.Delta;
+        }
+
+        private void GlControl_MouseUp(object sender, MouseEventArgs e)=>tracking = false;
+        private void GlControl_MouseDown(object sender, MouseEventArgs e) { tracking = true; }
+        
+
+        private void GlControl_MouseMove(object sender, MouseEventArgs e)
+        {
+                Vector2 p = new Vector2(e.X, e.Y);
+            if (tracking) 
+            {
+                var delta = prevM - p;
+                position += delta * sensetiity;
+            }
+                prevM = p;
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -52,14 +87,14 @@ namespace Fractals
             UpdateShader("../../../Res/shader.frag");
             VBO = GL.GenBuffer();
             VAO = GL.GenVertexArray();
-            
+
             //Init vbo
             //Set up vertices
             float[] Vertices = {
-                -1.0f, -1.0f, 0.0f,
-                1.0f, -1.0f, 0.0f,
-                1.0f,  1.0f, 0.0f,
-            -1.0f,  1.0f, 0.0f};
+                -1.0f,-1.0f, 0.0f,
+                 1.0f,-1.0f, 0.0f,
+                 1.0f, 1.0f, 0.0f,
+                -1.0f, 1.0f, 0.0f};
 
             //Set up VBO and VAO
             GL.BindVertexArray(VAO);
@@ -101,11 +136,14 @@ namespace Fractals
             glControl.MakeCurrent();
             //Set uniforms
             GL.Uniform3(1, new Vector3(glControl.ClientSize.Width, glControl.ClientSize.Height, 1.0f));
-            if (!paused)
+            if (!paused)//Updated uniforms only when not paused
             {
                 GL.Uniform1(0, (float)stopwatch.Elapsed.TotalSeconds);
                 GL.Uniform1(2, frame);
             }
+            GL.Uniform4(3,new Vector4( position.X,position.Y,1,1));
+            GL.Uniform1(4, (float)zoom);
+
             //Draw         
             GL.DrawArrays(PrimitiveType.Quads, 0, 4);
 
@@ -115,6 +153,9 @@ namespace Fractals
         }
         void Restart()
         {
+            position = new Vector2(0, 0);
+            prevM = new Vector2(0, 0);
+            zoom = 1000;
             frame = 0;
             if (paused)
                 stopwatch.Reset();
@@ -141,5 +182,8 @@ namespace Fractals
                 stopwatch.Stop();
             paused = !paused;
         }
+
+        private void shaderDataDisplayToolStripMenuItem_Click(object sender, EventArgs e)=>UpdateShader("../../../Res/data.frag");
+        
     }
 }
