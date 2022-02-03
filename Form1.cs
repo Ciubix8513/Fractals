@@ -22,7 +22,6 @@ namespace Fractals
 
         public Form1()
         {
-
             this.FormClosed += Form1_FormClosed;
             InitializeComponent();
         }
@@ -43,6 +42,7 @@ namespace Fractals
             if (shader != null)
                 shader.Dispose();//Dispose first
             shader = new Shader(s);
+            shader.Use();
         }
 
         private void glControl_Load(object? sender, EventArgs e)
@@ -52,9 +52,7 @@ namespace Fractals
             UpdateShader("../../../Res/shader.frag");
             VBO = GL.GenBuffer();
             VAO = GL.GenVertexArray();
-            //Init shader
-
-
+            
             //Init vbo
             //Set up vertices
             float[] Vertices = {
@@ -82,6 +80,8 @@ namespace Fractals
             _timer.Interval = 15;   // 1000 ms per sec / 15 ms per frame = 60 FPS
             _timer.Start();
             stopwatch.Start();
+            
+            GL.BindVertexArray(VAO);
 
             glControl_Resize(glControl, EventArgs.Empty);
         }
@@ -94,29 +94,19 @@ namespace Fractals
             GL.Viewport(0, 0, glControl.ClientSize.Width, glControl.ClientSize.Height);
         }
 
-        private void glControl_Paint(object sender, PaintEventArgs e)
-        {
-            Render();
-        }
+        private void glControl_Paint(object sender, PaintEventArgs e)=>Render();
+        
         private void Render()
         {
             glControl.MakeCurrent();
-            GL.ClearColor(Color4.Black);
-            //Clear the back buffer
-            GL.Clear(ClearBufferMask.ColorBufferBit);
-
-            //Set shader
-            shader.Use();
-
             //Set uniforms
             GL.Uniform3(1, new Vector3(glControl.ClientSize.Width, glControl.ClientSize.Height, 1.0f));
-            float f = (float)stopwatch.Elapsed.TotalSeconds;
-            GL.Uniform1(0, f);
-            //f = 
-            GL.Uniform1(2, frame);
-
-            //Draw
-            GL.BindVertexArray(VAO);
+            if (!paused)
+            {
+                GL.Uniform1(0, (float)stopwatch.Elapsed.TotalSeconds);
+                GL.Uniform1(2, frame);
+            }
+            //Draw         
             GL.DrawArrays(PrimitiveType.Quads, 0, 4);
 
             glControl.SwapBuffers();

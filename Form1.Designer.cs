@@ -30,13 +30,13 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.glControl = new OpenTK.WinForms.GLControl();
             this.reloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.calibrationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mainShaderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.calibrationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mainShaderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.glControl = new OpenTK.WinForms.GLControl();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -53,23 +53,6 @@
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
-            // glControl
-            // 
-            this.glControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.glControl.API = OpenTK.Windowing.Common.ContextAPI.OpenGL;
-            this.glControl.APIVersion = new System.Version(3, 3, 0, 0);
-            this.glControl.Flags = OpenTK.Windowing.Common.ContextFlags.Default;
-            this.glControl.IsEventDriven = true;
-            this.glControl.Location = new System.Drawing.Point(0, 27);
-            this.glControl.Name = "glControl";
-            this.glControl.Profile = OpenTK.Windowing.Common.ContextProfile.Compatability;
-            this.glControl.Size = new System.Drawing.Size(919, 552);
-            this.glControl.TabIndex = 2;
-            this.glControl.Text = "glControl1";
-            this.glControl.Load += new System.EventHandler(this.glControl_Load);
-            // 
             // reloadToolStripMenuItem
             // 
             this.reloadToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -78,6 +61,21 @@
             this.reloadToolStripMenuItem.Name = "reloadToolStripMenuItem";
             this.reloadToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
             this.reloadToolStripMenuItem.Text = "Shaders";
+            
+            // 
+            // calibrationToolStripMenuItem
+            // 
+            this.calibrationToolStripMenuItem.Name = "calibrationToolStripMenuItem";
+            this.calibrationToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.calibrationToolStripMenuItem.Text = "Calibration";
+            this.calibrationToolStripMenuItem.Click += new System.EventHandler(this.calibrationToolStripMenuItem_Click);
+            // 
+            // mainShaderToolStripMenuItem
+            // 
+            this.mainShaderToolStripMenuItem.Name = "mainShaderToolStripMenuItem";
+            this.mainShaderToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.mainShaderToolStripMenuItem.Text = "Main shader";
+            this.mainShaderToolStripMenuItem.Click += new System.EventHandler(this.mainShaderToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
@@ -100,19 +98,22 @@
             this.toolStripMenuItem3.Text = "| |";
             this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
             // 
-            // calibrationToolStripMenuItem
+            // glControl
             // 
-            this.calibrationToolStripMenuItem.Name = "calibrationToolStripMenuItem";
-            this.calibrationToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.calibrationToolStripMenuItem.Text = "Calibration";
-            this.calibrationToolStripMenuItem.Click += new System.EventHandler(this.calibrationToolStripMenuItem_Click);
-            // 
-            // mainShaderToolStripMenuItem
-            // 
-            this.mainShaderToolStripMenuItem.Name = "mainShaderToolStripMenuItem";
-            this.mainShaderToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.mainShaderToolStripMenuItem.Text = "Main shader";
-            this.mainShaderToolStripMenuItem.Click += new System.EventHandler(this.mainShaderToolStripMenuItem_Click);
+            this.glControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.glControl.API = OpenTK.Windowing.Common.ContextAPI.OpenGL;
+            this.glControl.APIVersion = new System.Version(3, 3, 0, 0);
+            this.glControl.Flags = OpenTK.Windowing.Common.ContextFlags.Default;
+            this.glControl.IsEventDriven = true;
+            this.glControl.Location = new System.Drawing.Point(0, 27);
+            this.glControl.Name = "glControl";
+            this.glControl.Profile = OpenTK.Windowing.Common.ContextProfile.Compatability;
+            this.glControl.Size = new System.Drawing.Size(919, 552);
+            this.glControl.TabIndex = 2;
+            this.glControl.Text = "glControl1";
+            this.glControl.Load += new System.EventHandler(this.glControl_Load);
             // 
             // Form1
             // 

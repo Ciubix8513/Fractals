@@ -58,13 +58,17 @@ namespace Fractals
             GL.CompileShader(VertShader);
             string LogV = GL.GetShaderInfoLog(VertShader);
             if (LogV.Length > 0)
+            {
                 System.Console.WriteLine($"Vertex shader at {vert} creation log: {LogV}");
-
+                MessageBox.Show(LogV);
+            }
             GL.CompileShader(FragShader);
             string LogF = GL.GetShaderInfoLog(FragShader);
             if (LogF.Length > 0)
+            {
                 System.Console.WriteLine($"Fragment shader at {frag} creation log: {LogF}");
-
+                MessageBox.Show(LogF);
+            }
             Handle = GL.CreateProgram();
 
             GL.AttachShader(Handle, VertShader);
@@ -75,8 +79,6 @@ namespace Fractals
             GL.DetachShader(Handle, FragShader);
             GL.DeleteShader(VertShader);
             GL.DeleteShader(FragShader);
-
-
         }
 
         public Shader( string frag)
@@ -85,9 +87,7 @@ namespace Fractals
             FragShader = 0;
             Handle = 0;
             string vSrc = "#version 330\nlayout (location = 0) in vec3 Pos;void main(){gl_Position = vec4(Pos,1.0);}";
-          
-               
-            
+
             string fSrc;
             using (StreamReader reader = new StreamReader(frag, Encoding.UTF8))
             {
@@ -113,13 +113,11 @@ namespace Fractals
             GL.AttachShader(Handle, VertShader);
             GL.AttachShader(Handle, FragShader);
             GL.LinkProgram(Handle);
-
+            //Cleanup
             GL.DetachShader(Handle, VertShader);
             GL.DetachShader(Handle, FragShader);
             GL.DeleteShader(VertShader);
             GL.DeleteShader(FragShader);
-
-
         }
         public void Use()
         {
