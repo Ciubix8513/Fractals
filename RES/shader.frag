@@ -9,12 +9,41 @@ layout(location = 4) uniform float zoom;
 
 layout(location = 5) uniform vec4[] colors;
 
+layout(location = 9) uniform int flags;
+//1 == single color
+//2 == gradient
+//4 == diff shading TODO
+
+
+vec4 getCol(float coord,int ColNum)
+{ 
+    //Make these uniforms and allow user to select colors
+    vec4[] cols =vec4[] (vec4(85,205,252,255),vec4(247,168,184,255),vec4(255),vec4(247,168,184,255),vec4(85,205,252,255));       
+    int arrLength = 5;
+    
+    if(ColNum == 1) 
+        return cols[0];
+        
+    float cstep1 = 1.0 / float(ColNum - 1);//Num of subgradients = num of colors - 1
+    
+    for(int i = 1; i < ColNum; i++)
+    {
+        if(coord < cstep1 * float(i))
+        return mix(cols[int(mod(float(i-1),float(arrLength)))],cols[int(mod(float(i),float(arrLength)))], coord / cstep1 - float (i - 1));
+    }    
+    return vec4(coord);
+}
+
+
+
 
 vec4 GetColor(vec2 uv,float i,float maxI)
 {
    if(i == maxI)
        return vec4(0);    
-    return (vec4(0,1,1,1) *(i /maxI)); 
+    //return (vec4(0,1,1,1) *(i /maxI)); 
+   // if((flags & 1) == 1)
+    return getCol((maxI * .15 + i)  / maxI,5) / 255;
 }
 
 void main( )
@@ -31,8 +60,8 @@ void main( )
     vec2 coords = vec2(0);    
     vec2 coords2 = vec2(0);
     int iter = 0;
-    int maxIter = min( iFrame / 10,150);
-    maxIter = 1000;
+    int maxIter = min( iFrame / 10,1000);
+   // maxIter = 5000;
     //Optimised escape time algorithm https://en.wikipedia.org/wiki/Plotting_algorithms_for_the_Mandelbrot_set
     while(dot(coords,coords)<= 4.0 && iter < maxIter)
     {
