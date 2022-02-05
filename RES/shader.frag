@@ -1,4 +1,4 @@
-﻿#version 430
+﻿#version 460
 #pragma optionNV(fastmath off)
 #pragma optionNV(fastprecision off)
 
@@ -10,36 +10,22 @@ layout(location = 2) uniform int iFrame;
 layout(location = 3) uniform vec4 iMouse;
 layout(location = 4) uniform float zoom;
 
-layout(location = 5) uniform vec4[] colors;
-
-layout(location = 9) uniform int flags;
-//1 == single color
-//2 == gradient
-//4 == diff shading TODO
-
-float rand(float s)
+layout(location = 5) uniform int arrLength;
+layout (std430,binding = 0) buffer colors
 {
-  return fract(sin(s*12.9898) * 43758.5453);
-}
+    vec4 cols[]; 
+};
+
 
 
 vec4 getCol(float coord,int ColNum)
-{ 
-    //Make these uniforms and allow user to select colors
-    vec4[] cols =vec4[] (vec4(85,205,252,255),vec4(247,168,184,255),vec4(255),vec4(247,168,184,255),vec4(85,205,252,255));       
-    vec4[] cols1 = vec4[] (vec4(255,0,24,255),vec4(255,165,44,255),vec4(255,255,65,255),vec4(0,128,24,255),vec4(0,0,249,255),vec4(134,0,125,255));
-    int arrLength = 5;
-    
+{      
     if(ColNum == 1) 
-        return cols[0];
-        
-    float cstep1 = 1.0 / float(ColNum - 1);//Num of subgradients = num of colors - 1
-    
-    for(int i = 1; i < ColNum; i++)
-    {
+        return cols[0];        
+    float cstep1 = 1.0 / float(ColNum - 1); //Num of subgradients = num of colors - 1    
+    for(int i = 1; i < ColNum; i++)    
         if(coord < cstep1 * float(i))
-        return mix(cols[int(mod(float(i-1),float(arrLength)))],cols[int(mod(float(i),float(arrLength)))], coord / cstep1 - float (i - 1));
-    }    
+        return mix(cols[int(mod(float(i-1),float(arrLength)))],cols[int(mod(float(i),float(arrLength)))], coord / cstep1 - float (i - 1));        
     return vec4(coord);
 }
 
@@ -49,9 +35,7 @@ vec4 getCol(float coord,int ColNum)
 vec4 GetColor(vec2 uv,float i,float maxI)
 {
    if(i == maxI)
-       return vec4(0);    
-    //return (vec4(0,1,1,1) *(i /maxI)); 
-   // if((flags & 1) == 1)
+       return vec4(0);   
     return getCol((maxI * .15 + i)  / maxI,120) / 255;
 }
 
@@ -62,7 +46,7 @@ vec2 coords = vec2(0);
     vec2 coords2 = vec2(0);
     int iter = 0;
     int maxIter = min( iFrame / 10,1000);
-    maxIter = 6000;
+    maxIter = 1500;
     //Optimised escape time algorithm https://en.wikipedia.org/wiki/Plotting_algorithms_for_the_Mandelbrot_set
     while(dot(coords,coords)<= 4.0 && iter < maxIter)
     {
@@ -83,4 +67,4 @@ void main( )
 
     FragColor = fractal(c);
     
-}
+};

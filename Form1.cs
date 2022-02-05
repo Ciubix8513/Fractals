@@ -14,6 +14,7 @@ namespace Fractals
         private Timer _timer = null!;
         int VBO; //Vertex buffer object
         int VAO; //Vertex array object
+        int buf;
         int frame;
         Shader shader;
         System.Diagnostics.Stopwatch stopwatch;
@@ -31,6 +32,11 @@ namespace Fractals
         Vector2 cam_dst;
         Vector2i prevDrag;
 
+        public Vector4[] colors = new Vector4[] { new Vector4(85, 205, 252, 255), new Vector4(247, 168, 184, 255),new Vector4(255,255,255,255), new  Vector4(247, 168, 184, 255), new Vector4(85, 205, 252, 255) };
+        
+        
+        
+        
         Vector2 screen2p(Vector2i c) 
         {
             return new Vector2(c.X - glControl.Width / 2, c.Y - glControl.Height / 2) / zoom - cam;
@@ -112,15 +118,6 @@ namespace Fractals
                  1.0f,-1.0f, 0.0f,
                  1.0f, 1.0f, 0.0f,
                 -1.0f, 1.0f, 0.0f};
-
-
-            ;
-           
-
-
-
-
-
             //Set up VBO and VAO
             GL.BindVertexArray(VAO);
             GL.BindBuffer(BufferTarget.ArrayBuffer, VBO);
@@ -128,9 +125,16 @@ namespace Fractals
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
             GL.EnableVertexAttribArray(0);
 
+            buf = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ShaderStorageBuffer, buf);
+            GL.BufferData(BufferTarget.ShaderStorageBuffer,colors.Length * sizeof(float) * 4, colors, BufferUsageHint.StreamRead);
+            GL.BindBufferBase(BufferRangeTarget.ShaderStorageBuffer, 0, buf);
+            GL.BindBuffer(BufferTarget.ShaderStorageBuffer, 0);
+
             glControl.Resize += glControl_Resize;
             glControl.Paint += glControl_Paint;
 
+            Restart();
             // Redraw the screen every 1/60 of a second.
             _timer = new Timer();
             _timer.Tick += (sender, e) =>
@@ -183,6 +187,11 @@ namespace Fractals
             }
             GL.Uniform4(3,new Vector4( cam.X,cam.Y,1,1));
             GL.Uniform1(4, (float)zoom);
+            GL.Uniform1(5, colors.Length);
+
+           // GL.Uniform4(10, cols.Length, cols);
+           // GL.Uniform1(6, cols.Length);
+                
 
             //Draw         
             GL.DrawArrays(PrimitiveType.Quads, 0, 4);
