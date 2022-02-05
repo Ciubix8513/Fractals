@@ -1,4 +1,7 @@
 ﻿#version 430
+#pragma optionNV(fastmath off)
+#pragma optionNV(fastprecision off)
+
 out vec4 FragColor;
 
 layout(location = 0 ) uniform float iTime = 0;
@@ -14,11 +17,17 @@ layout(location = 9) uniform int flags;
 //2 == gradient
 //4 == diff shading TODO
 
+float rand(float s)
+{
+  return fract(sin(s*12.9898) * 43758.5453);
+}
+
 
 vec4 getCol(float coord,int ColNum)
 { 
     //Make these uniforms and allow user to select colors
     vec4[] cols =vec4[] (vec4(85,205,252,255),vec4(247,168,184,255),vec4(255),vec4(247,168,184,255),vec4(85,205,252,255));       
+    vec4[] cols1 = vec4[] (vec4(255,0,24,255),vec4(255,165,44,255),vec4(255,255,65,255),vec4(0,128,24,255),vec4(0,0,249,255),vec4(134,0,125,255));
     int arrLength = 5;
     
     if(ColNum == 1) 
@@ -43,33 +52,35 @@ vec4 GetColor(vec2 uv,float i,float maxI)
        return vec4(0);    
     //return (vec4(0,1,1,1) *(i /maxI)); 
    // if((flags & 1) == 1)
-    return getCol((maxI * .15 + i)  / maxI,5) / 255;
+    return getCol((maxI * .15 + i)  / maxI,120) / 255;
 }
 
-void main( )
-{    
-    vec2 MinVals = vec2(-1.0,-0.5); 
-    vec2 uv = (gl_FragCoord.xy / iResolution.y);//Get ss coords
-    uv = (uv + MinVals)  / 0.42; //Offset and scale ss coords     
-    vec2 Mouse = iMouse.xy / exp(zoom / 1000);
-    uv /= zoom / 1000.0 * exp(zoom / 1000); 
-    uv.x += Mouse.x / iResolution.x;
-    uv.y -= Mouse.y / iResolution.y;
+vec4 fractal(vec2 C)
+{
 
-
-    vec2 coords = vec2(0);    
+vec2 coords = vec2(0);    
     vec2 coords2 = vec2(0);
     int iter = 0;
     int maxIter = min( iFrame / 10,1000);
-   // maxIter = 5000;
+    maxIter = 6000;
     //Optimised escape time algorithm https://en.wikipedia.org/wiki/Plotting_algorithms_for_the_Mandelbrot_set
     while(dot(coords,coords)<= 4.0 && iter < maxIter)
     {
-        coords.y = 2.0* coords.x * coords.y + uv.y;
-        coords.x = coords2.x - coords2.y + uv.x;
+        coords.y = 2.0* coords.x * coords.y + C.y;
+        coords.x = coords2.x - coords2.y + C.x;
         coords2 = coords * coords;
         iter++;
     }    
-    // Output to screen
-    FragColor = GetColor(uv,float(iter) , float(maxIter));
+    return GetColor(C,float(iter) , float(maxIter));
+}
+
+
+void main( )
+{    
+   
+    vec2 uv = gl_FragCoord.xy - (iResolution.xy *.5);
+    vec2 c = vec2(uv * vec2(1.0,-1.0) /zoom- iMouse.xy );
+
+    FragColor = fractal(c);
+    
 }

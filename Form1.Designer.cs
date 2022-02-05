@@ -33,11 +33,11 @@
             this.reloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.calibrationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainShaderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.shaderDataDisplayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.glControl = new OpenTK.WinForms.GLControl();
-            this.shaderDataDisplayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -78,6 +78,13 @@
             this.mainShaderToolStripMenuItem.Text = "Main shader";
             this.mainShaderToolStripMenuItem.Click += new System.EventHandler(this.mainShaderToolStripMenuItem_Click);
             // 
+            // shaderDataDisplayToolStripMenuItem
+            // 
+            this.shaderDataDisplayToolStripMenuItem.Name = "shaderDataDisplayToolStripMenuItem";
+            this.shaderDataDisplayToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.shaderDataDisplayToolStripMenuItem.Text = "Shader data display";
+            this.shaderDataDisplayToolStripMenuItem.Click += new System.EventHandler(this.shaderDataDisplayToolStripMenuItem_Click);
+            // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
@@ -115,13 +122,6 @@
             this.glControl.TabIndex = 2;
             this.glControl.Text = "glControl1";
             this.glControl.Load += new System.EventHandler(this.glControl_Load);
-            // 
-            // shaderDataDisplayToolStripMenuItem
-            // 
-            this.shaderDataDisplayToolStripMenuItem.Name = "shaderDataDisplayToolStripMenuItem";
-            this.shaderDataDisplayToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.shaderDataDisplayToolStripMenuItem.Text = "Shader data display";
-            this.shaderDataDisplayToolStripMenuItem.Click += new System.EventHandler(this.shaderDataDisplayToolStripMenuItem_Click);
             // 
             // Form1
             // 

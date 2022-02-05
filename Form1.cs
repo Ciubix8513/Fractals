@@ -25,6 +25,16 @@ namespace Fractals
         float sensetiity = 2.0f;
         float zoom = 1000.0f;
 
+        float zoom_dst;
+        Vector2 cam;
+        Vector2i cam_fp;
+        Vector2 cam_dst;
+        Vector2i prevDrag;
+
+        Vector2 screen2p(Vector2i c) 
+        {
+            return new Vector2(c.X - glControl.Width / 2, c.Y - glControl.Height / 2) / zoom - cam;
+        }
 
 
         public Form1()
@@ -43,22 +53,29 @@ namespace Fractals
 
         private void GlControl_MouseWheel(object sender, MouseEventArgs e)
         {
-            zoom += e.Delta;
+            zoom_dst *= MathF.Pow(1.1f, e.Delta / 60);
+            cam_fp = new Vector2i(e.X, e.Y);
         }
 
         private void GlControl_MouseUp(object sender, MouseEventArgs e)=>tracking = false;
-        private void GlControl_MouseDown(object sender, MouseEventArgs e) { tracking = true; }
-        
+        private void GlControl_MouseDown(object sender, MouseEventArgs e) { prevDrag = new Vector2i(e.X, e.Y); tracking = true; }
+
 
         private void GlControl_MouseMove(object sender, MouseEventArgs e)
         {
-                Vector2 p = new Vector2(e.X, e.Y);
-            if (tracking) 
+            //    Vector2 p = new Vector2(e.X, e.Y);
+            //if (tracking) 
+            //{
+            //    var delta = prevM - p;
+            //    position += delta * sensetiity;
+            //}
+            //    prevM = p;
+            if (tracking)
             {
-                var delta = prevM - p;
-                position += delta * sensetiity;
+                Vector2i curDrag = new Vector2i(e.X, e.Y);
+                cam_dst += ((Vector2)curDrag - (Vector2)prevDrag) / zoom;
+                prevDrag = curDrag;
             }
-                prevM = p;
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -95,6 +112,14 @@ namespace Fractals
                  1.0f,-1.0f, 0.0f,
                  1.0f, 1.0f, 0.0f,
                 -1.0f, 1.0f, 0.0f};
+
+
+            ;
+           
+
+
+
+
 
             //Set up VBO and VAO
             GL.BindVertexArray(VAO);
@@ -134,6 +159,21 @@ namespace Fractals
         private void Render()
         {
             glControl.MakeCurrent();
+
+
+            Vector2 fp, cam_delta;
+            fp = screen2p(cam_fp);
+            zoom = zoom * .8f + zoom_dst * .2f;
+            cam_delta = screen2p(cam_fp);
+
+            cam_dst += cam_delta - fp;
+            cam += cam_delta - fp;
+
+            cam = cam * .8f + cam_dst * .2f;
+
+
+
+
             //Set uniforms
             GL.Uniform3(1, new Vector3(glControl.ClientSize.Width, glControl.ClientSize.Height, 1.0f));
             if (!paused)//Updated uniforms only when not paused
@@ -141,7 +181,7 @@ namespace Fractals
                 GL.Uniform1(0, (float)stopwatch.Elapsed.TotalSeconds);
                 GL.Uniform1(2, frame);
             }
-            GL.Uniform4(3,new Vector4( position.X,position.Y,1,1));
+            GL.Uniform4(3,new Vector4( cam.X,cam.Y,1,1));
             GL.Uniform1(4, (float)zoom);
 
             //Draw         
@@ -153,9 +193,11 @@ namespace Fractals
         }
         void Restart()
         {
-            position = new Vector2(0, 0);
-            prevM = new Vector2(0, 0);
-            zoom = 1000;
+            zoom = zoom_dst = 100.0f;
+            cam = cam_dst = Vector2.Zero;
+            position = Vector2.Zero;
+            prevM = Vector2.Zero; ;
+            
             frame = 0;
             if (paused)
                 stopwatch.Reset();
@@ -184,6 +226,7 @@ namespace Fractals
         }
 
         private void shaderDataDisplayToolStripMenuItem_Click(object sender, EventArgs e)=>UpdateShader("../../../Res/data.frag");
-        
+
+       
     }
 }
