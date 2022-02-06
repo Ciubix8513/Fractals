@@ -22,8 +22,7 @@ namespace Fractals
         string currentShader;
         bool tracking = false;
         Vector2 position;
-        Vector2 prevM;
-        float sensetiity = 2.0f;
+        Vector2 prevM;     
         float zoom = 1000.0f;
 
         float zoom_dst;
@@ -32,8 +31,13 @@ namespace Fractals
         Vector2 cam_dst;
         Vector2i prevDrag;
 
-        public Vector4[] colors = new Vector4[] { new Vector4(85, 205, 252, 255), new Vector4(247, 168, 184, 255),new Vector4(255,255,255,255), new  Vector4(247, 168, 184, 255), new Vector4(85, 205, 252, 255) };
-        
+        Vector4[] colors = new Vector4[] { new Vector4(85, 205, 252, 255), new Vector4(247, 168, 184, 255),new Vector4(255,255,255,255), new  Vector4(247, 168, 184, 255), new Vector4(85, 205, 252, 255) };
+        void UpdateColors()
+        {
+            GL.BindBuffer(BufferTarget.ShaderStorageBuffer, buf);
+            GL.BufferSubData(BufferTarget.ShaderStorageBuffer,IntPtr.Zero, colors.Length * sizeof(float) * 4, colors);        
+            GL.BindBuffer(BufferTarget.ShaderStorageBuffer, 0);
+        }
         
         
         
@@ -65,17 +69,8 @@ namespace Fractals
 
         private void GlControl_MouseUp(object sender, MouseEventArgs e)=>tracking = false;
         private void GlControl_MouseDown(object sender, MouseEventArgs e) { prevDrag = new Vector2i(e.X, e.Y); tracking = true; }
-
-
         private void GlControl_MouseMove(object sender, MouseEventArgs e)
-        {
-            //    Vector2 p = new Vector2(e.X, e.Y);
-            //if (tracking) 
-            //{
-            //    var delta = prevM - p;
-            //    position += delta * sensetiity;
-            //}
-            //    prevM = p;
+        { 
             if (tracking)
             {
                 Vector2i curDrag = new Vector2i(e.X, e.Y);
@@ -89,6 +84,7 @@ namespace Fractals
             shader.Dispose();
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             GL.DeleteBuffer(VBO);
+            GL.DeleteBuffer(buf);
         }
 
         void UpdateShader(string s)
@@ -130,6 +126,7 @@ namespace Fractals
             GL.BufferData(BufferTarget.ShaderStorageBuffer,colors.Length * sizeof(float) * 4, colors, BufferUsageHint.StreamRead);
             GL.BindBufferBase(BufferRangeTarget.ShaderStorageBuffer, 0, buf);
             GL.BindBuffer(BufferTarget.ShaderStorageBuffer, 0);
+            
 
             glControl.Resize += glControl_Resize;
             glControl.Paint += glControl_Paint;
@@ -156,27 +153,22 @@ namespace Fractals
             if (glControl.ClientSize.Height == 0)
                 glControl.ClientSize = new System.Drawing.Size(glControl.ClientSize.Width, 1);
             GL.Viewport(0, 0, glControl.ClientSize.Width, glControl.ClientSize.Height);
+            
         }
 
         private void glControl_Paint(object sender, PaintEventArgs e)=>Render();
         
         private void Render()
         {
-            glControl.MakeCurrent();
-
-
+            //glControl.MakeCurrent();
+            //Camera stuff
             Vector2 fp, cam_delta;
             fp = screen2p(cam_fp);
             zoom = zoom * .8f + zoom_dst * .2f;
             cam_delta = screen2p(cam_fp);
-
             cam_dst += cam_delta - fp;
             cam += cam_delta - fp;
-
             cam = cam * .8f + cam_dst * .2f;
-
-
-
 
             //Set uniforms
             GL.Uniform3(1, new Vector3(glControl.ClientSize.Width, glControl.ClientSize.Height, 1.0f));
@@ -188,10 +180,6 @@ namespace Fractals
             GL.Uniform4(3,new Vector4( cam.X,cam.Y,1,1));
             GL.Uniform1(4, (float)zoom);
             GL.Uniform1(5, colors.Length);
-
-           // GL.Uniform4(10, cols.Length, cols);
-           // GL.Uniform1(6, cols.Length);
-                
 
             //Draw         
             GL.DrawArrays(PrimitiveType.Quads, 0, 4);

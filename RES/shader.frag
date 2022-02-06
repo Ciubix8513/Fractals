@@ -36,35 +36,75 @@ vec4 GetColor(vec2 uv,float i,float maxI)
 {
    if(i == maxI)
        return vec4(0);   
-    return getCol((maxI * .15 + i)  / maxI,120) / 255;
+    return getCol((maxI * .15 + i)  / maxI,200) / 255;
 }
+
+vec2 complexPow(vec2 z, float n)
+{
+    float r = length(z);
+    float theta = atan( z.y , z.x);
+
+
+    return pow(r,n) * vec2(cos(n * theta),sin(n*theta) ) ;
+}
+vec2 complexCube(vec2 z)
+{
+    return vec2(z.x*z.x*z.x -3 *z.x *z.y*z.y,3 * z.x*z.x*z.y - z.y*z.y*z.y)    ;
+}
+vec2 complexDiv(vec2 a,vec2 b)
+{
+    return vec2((a.x *b.x + a.y * b.y )/(b.x*b.x + b.y*b.y),(a.y * b.x - a.x *b.y) / (b.x*b.x + b.y*b.y) );
+}
+
+
+vec2 mandelbrot(vec2 z, vec2 c)
+{
+    //Thanks IQ  https://iquilezles.org/www/articles/mset_1bulb/mset1bulb.htm
+    float c2 = dot(c,c);
+    if( 256.0*c2*c2 - 96.0*c2 + 32.0*c.x - 3.0 < 0.0 ) return vec2(6.9,420);
+    if( 16.0*(c2+2.0*c.x+1.0) - 1.0 < 0.0 ) return vec2(6.9,420);
+    return vec2(z.x *z.x - z.y*z.y,2. * z.x * z.y)+ c; //z is a complex number Z^2 + C
+}
+
+vec2 BurningShip(vec2 z,vec2 c)
+{
+    z = abs(z);
+    return vec2(z.x *z.x - z.y*z.y,2. * z.x * z.y)+ c; //z is a complex number Z^2 + C
+}
+
+vec2 Tricorn(vec2 z ,vec2 c )
+{
+    return vec2(z.x *z.x - z.y*z.y,-2. * z.x * z.y)+ c; //z is a complex number Z^2 + C
+
+}
+
+vec2 Feather(vec2 z,vec2 c)
+{
+    return complexDiv(complexCube(z) , (vec2(1,0) + (z*z))) + c;
+}
+
 
 vec4 fractal(vec2 C)
 {
-
-vec2 coords = vec2(0);    
-    vec2 coords2 = vec2(0);
+    vec2 coords = vec2(0);      
     int iter = 0;
-    int maxIter = min( iFrame / 10,1000);
-    maxIter = 1500;
-    //Optimised escape time algorithm https://en.wikipedia.org/wiki/Plotting_algorithms_for_the_Mandelbrot_set
+    int maxIter = 1000;
+  
     while(dot(coords,coords)<= 4.0 && iter < maxIter)
-    {
-        coords.y = 2.0* coords.x * coords.y + C.y;
-        coords.x = coords2.x - coords2.y + C.x;
-        coords2 = coords * coords;
+    {       
+        coords = Feather(coords,C);
         iter++;
     }    
+   if(coords ==vec2(6.9,420))
+        iter = maxIter;
     return GetColor(C,float(iter) , float(maxIter));
 }
 
 
 void main( )
-{    
-   
+{   
     vec2 uv = gl_FragCoord.xy - (iResolution.xy *.5);
     vec2 c = vec2(uv * vec2(1.0,-1.0) /zoom- iMouse.xy );
 
-    FragColor = fractal(c);
-    
+    FragColor = fractal(c);    
 };
