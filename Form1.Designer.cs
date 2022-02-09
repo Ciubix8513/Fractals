@@ -33,10 +33,10 @@
             this.reloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.calibrationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainShaderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.shaderDataDisplayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.glControl = new OpenTK.WinForms.GLControl();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -47,7 +47,8 @@
             this.reloadToolStripMenuItem,
             this.toolStripMenuItem1,
             this.toolStripMenuItem2,
-            this.toolStripMenuItem3});
+            this.toolStripMenuItem3,
+            this.toolStripMenuItem4});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(919, 24);
@@ -58,8 +59,7 @@
             // 
             this.reloadToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.calibrationToolStripMenuItem,
-            this.mainShaderToolStripMenuItem,
-            this.shaderDataDisplayToolStripMenuItem});
+            this.mainShaderToolStripMenuItem});
             this.reloadToolStripMenuItem.Name = "reloadToolStripMenuItem";
             this.reloadToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
             this.reloadToolStripMenuItem.Text = "Shaders";
@@ -76,7 +76,7 @@
             this.mainShaderToolStripMenuItem.Name = "mainShaderToolStripMenuItem";
             this.mainShaderToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.mainShaderToolStripMenuItem.Text = "Main shader";
-            this.mainShaderToolStripMenuItem.Click += new System.EventHandler(this.mainShaderToolStripMenuItem_Click);                     
+            this.mainShaderToolStripMenuItem.Click += new System.EventHandler(this.mainShaderToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
@@ -99,6 +99,13 @@
             this.toolStripMenuItem3.Text = "| |";
             this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
             // 
+            // toolStripMenuItem4
+            // 
+            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(77, 20);
+            this.toolStripMenuItem4.Text = "Screenshot";
+            this.toolStripMenuItem4.Click += new System.EventHandler(this.toolStripMenuItem4_Click);
+            // 
             // glControl
             // 
             this.glControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -111,7 +118,7 @@
             this.glControl.Location = new System.Drawing.Point(0, 27);
             this.glControl.Name = "glControl";
             this.glControl.Profile = OpenTK.Windowing.Common.ContextProfile.Compatability;
-            this.glControl.Size = new System.Drawing.Size(919, 552);
+            this.glControl.Size = new System.Drawing.Size(919, 553);
             this.glControl.TabIndex = 2;
             this.glControl.Text = "glControl1";
             this.glControl.Load += new System.EventHandler(this.glControl_Load);
@@ -143,7 +150,7 @@
         private System.Windows.Forms.ToolStripMenuItem calibrationToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mainShaderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
-        private System.Windows.Forms.ToolStripMenuItem shaderDataDisplayToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
     }
 }
 

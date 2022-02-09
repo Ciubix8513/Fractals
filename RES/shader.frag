@@ -104,15 +104,15 @@ float rand(float s)
 void main( )
 {   
     vec2 uv = gl_FragCoord.xy - (iResolution.xy *.5);
-    int AA = 1;
+    int AA = 2;
     vec4 col;
     for(int i = 0; i< AA; i++)
     {
-        vec2 dxy =vec2(0);// vec2(rand(i*.54321 + Time),rand(i*0.12345 + Time)  );        
+        vec2 dxy = vec2(rand(i*.54321 + Time),rand(i*0.12345 + Time)  );        
         vec2 c = vec2((uv + dxy) * vec2(1.0,-1.0) /zoom- iMouse.xy );        
         col += fractal(c);    
     }
     col /= AA;
 
-    FragColor = col;//vec4(clamp(col.xyz,0,1),1.0/(Time + 1.0));
+    FragColor = vec4(clamp(col.xyz,0,1),1.0/(Time + 1.0));
 };
