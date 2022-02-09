@@ -9,10 +9,10 @@ layout(location = 1)  uniform vec3 iResolution;
 layout(location = 2) uniform int iFrame;
 layout(location = 3) uniform vec4 iMouse;
 layout(location = 4) uniform float zoom;
-layout(location = 6)uniform int Time;
-
-
 layout(location = 5) uniform int arrLength;
+layout(location = 6)uniform int Time;
+layout (location =7) uniform int cFractal;
+
 layout (std430,binding = 0) buffer colors
 {
     vec4 cols[]; 
@@ -85,10 +85,20 @@ vec4 fractal(vec2 C)
     vec2 coords = vec2(0);      
     int iter = 0;
     int maxIter = 1000;
-  
-    while(dot(coords,coords)<= 4.0 && iter < maxIter)
+    //maxIter = int(min(iTime / 10, 1200));
+    float maxDot = 4.0;
+    if((cFractal & 8) == 8)
+    maxDot = 10000.0;
+    while(dot(coords,coords)<=maxDot && iter < maxIter)
     {       
+        if((cFractal & 1) == 1)
         coords = mandelbrot(coords,C );
+        if((cFractal & 2) == 2)
+        coords = BurningShip(coords,C );
+        if((cFractal & 4) == 4)
+        coords = Tricorn(coords,C );
+        if((cFractal & 8) == 8)
+        coords = Feather(coords,C );        
         iter++;
     }    
     if(coords ==vec2(6.9,420)) //To skip the main bulb or any other similar things
@@ -104,7 +114,7 @@ float rand(float s)
 void main( )
 {   
     vec2 uv = gl_FragCoord.xy - (iResolution.xy *.5);
-    int AA = 2;
+    int AA = 1;
     vec4 col;
     for(int i = 0; i< AA; i++)
     {

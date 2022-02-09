@@ -31,13 +31,15 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.reloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.calibrationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mainShaderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.glControl = new OpenTK.WinForms.GLControl();
+            this.mandelbrotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.burningShipToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tricornToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.featherToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,25 +60,13 @@
             // reloadToolStripMenuItem
             // 
             this.reloadToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.calibrationToolStripMenuItem,
-            this.mainShaderToolStripMenuItem});
+            this.mandelbrotToolStripMenuItem,
+            this.burningShipToolStripMenuItem,
+            this.tricornToolStripMenuItem,
+            this.featherToolStripMenuItem});
             this.reloadToolStripMenuItem.Name = "reloadToolStripMenuItem";
-            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
-            this.reloadToolStripMenuItem.Text = "Shaders";
-            // 
-            // calibrationToolStripMenuItem
-            // 
-            this.calibrationToolStripMenuItem.Name = "calibrationToolStripMenuItem";
-            this.calibrationToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.calibrationToolStripMenuItem.Text = "Calibration";
-            this.calibrationToolStripMenuItem.Click += new System.EventHandler(this.calibrationToolStripMenuItem_Click);
-            // 
-            // mainShaderToolStripMenuItem
-            // 
-            this.mainShaderToolStripMenuItem.Name = "mainShaderToolStripMenuItem";
-            this.mainShaderToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.mainShaderToolStripMenuItem.Text = "Main shader";
-            this.mainShaderToolStripMenuItem.Click += new System.EventHandler(this.mainShaderToolStripMenuItem_Click);
+            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(63, 20);
+            this.reloadToolStripMenuItem.Text = "Fracrtals";
             // 
             // toolStripMenuItem1
             // 
@@ -123,6 +113,34 @@
             this.glControl.Text = "glControl1";
             this.glControl.Load += new System.EventHandler(this.glControl_Load);
             // 
+            // mandelbrotToolStripMenuItem
+            // 
+            this.mandelbrotToolStripMenuItem.Name = "mandelbrotToolStripMenuItem";
+            this.mandelbrotToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.mandelbrotToolStripMenuItem.Text = "Mandelbrot";
+            this.mandelbrotToolStripMenuItem.Click += new System.EventHandler(this.mandelbrotToolStripMenuItem_Click);
+            // 
+            // burningShipToolStripMenuItem
+            // 
+            this.burningShipToolStripMenuItem.Name = "burningShipToolStripMenuItem";
+            this.burningShipToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.burningShipToolStripMenuItem.Text = "Burning ship";
+            this.burningShipToolStripMenuItem.Click += new System.EventHandler(this.burningShipToolStripMenuItem_Click);
+            // 
+            // tricornToolStripMenuItem
+            // 
+            this.tricornToolStripMenuItem.Name = "tricornToolStripMenuItem";
+            this.tricornToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.tricornToolStripMenuItem.Text = "Tricorn";
+            this.tricornToolStripMenuItem.Click += new System.EventHandler(this.tricornToolStripMenuItem_Click);
+            // 
+            // featherToolStripMenuItem
+            // 
+            this.featherToolStripMenuItem.Name = "featherToolStripMenuItem";
+            this.featherToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.featherToolStripMenuItem.Text = "Feather";
+            this.featherToolStripMenuItem.Click += new System.EventHandler(this.featherToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -147,10 +165,12 @@
         private System.Windows.Forms.ToolStripMenuItem reloadToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
-        private System.Windows.Forms.ToolStripMenuItem calibrationToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem mainShaderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
+        private System.Windows.Forms.ToolStripMenuItem mandelbrotToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem burningShipToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tricornToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem featherToolStripMenuItem;
     }
 }
 

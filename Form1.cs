@@ -13,12 +13,12 @@ namespace Fractals
 {
     public partial class Form1 : Form
     {
-        enum Fractal 
+        enum Fractal
         {
-            Mandelbrot,
-            BurningShip,
-            Tricorn,
-            Feather
+            Mandelbrot = 1,
+            BurningShip = 2,
+            Tricorn = 4,
+            Feather =8
         }
 
         private Timer _timer = null!;
@@ -32,7 +32,7 @@ namespace Fractals
         string currentShader;
         bool tracking = false;
         Vector2 position;
-        Vector2 prevM;     
+        Vector2 prevM;
         float zoom = 1000.0f;
 
         int sameFrame = 0;
@@ -43,10 +43,11 @@ namespace Fractals
         Vector2 cam_dst;
         Vector2i prevDrag;
 
-        Fractal currentFractal = Fractal.Mandelbrot;
+        Fractal f = Fractal.Mandelbrot;
+        Fractal currentFractal { get { return f; }set { f = value; Restart(); } }
 
 
-        Vector4[] colors = new Vector4[] { new Vector4(85, 205, 252, 255), new Vector4(247, 168, 184, 255),new Vector4(255,255,255,255), new  Vector4(247, 168, 184, 255), new Vector4(85, 205, 252, 255) };
+        Vector4[] colors = new Vector4[] { new Vector4(85, 205, 252, 255), new Vector4(247, 168, 184, 255), new Vector4(255, 255, 255, 255), new Vector4(247, 168, 184, 255), new Vector4(85, 205, 252, 255) };
 #if DEBUG
         const string MainShader = "../../../Res/shader.frag";
         const string Calibration = "../../../Res/Calibration.frag";
@@ -58,10 +59,10 @@ namespace Fractals
         {
             sameFrame = 0;
             GL.BindBuffer(BufferTarget.ShaderStorageBuffer, buf);
-            GL.BufferSubData(BufferTarget.ShaderStorageBuffer,IntPtr.Zero, colors.Length * sizeof(float) * 4, colors);        
+            GL.BufferSubData(BufferTarget.ShaderStorageBuffer, IntPtr.Zero, colors.Length * sizeof(float) * 4, colors);
             GL.BindBuffer(BufferTarget.ShaderStorageBuffer, 0);
         }
-        Vector2 screen2p(Vector2i c) 
+        Vector2 screen2p(Vector2i c)
         {
             return new Vector2(c.X - glControl.Width / 2, c.Y - glControl.Height / 2) / zoom - cam;
         }
@@ -69,15 +70,15 @@ namespace Fractals
         {
             this.FormClosed += Form1_FormClosed;
             position = new Vector2(0, 0);
-            prevM = new Vector2(0,0);
-            
+            prevM = new Vector2(0, 0);
+
             InitializeComponent();
 
             glControl.MouseWheel += GlControl_MouseWheel;
             glControl.MouseDown += GlControl_MouseDown;
             glControl.MouseUp += GlControl_MouseUp;
             glControl.MouseMove += GlControl_MouseMove;
-            
+
         }
         private void GlControl_MouseWheel(object sender, MouseEventArgs e)
         {
@@ -85,10 +86,10 @@ namespace Fractals
             zoom_dst *= MathF.Pow(1.1f, e.Delta / 60);
             cam_fp = new Vector2i(e.X, e.Y);
         }
-        private void GlControl_MouseUp(object sender, MouseEventArgs e)=>tracking = false;
+        private void GlControl_MouseUp(object sender, MouseEventArgs e) => tracking = false;
         private void GlControl_MouseDown(object sender, MouseEventArgs e) { prevDrag = new Vector2i(e.X, e.Y); tracking = true; }
         private void GlControl_MouseMove(object sender, MouseEventArgs e)
-        { 
+        {
             if (tracking)
             {
                 sameFrame = 0;
@@ -139,10 +140,10 @@ namespace Fractals
 
             buf = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ShaderStorageBuffer, buf);
-            GL.BufferData(BufferTarget.ShaderStorageBuffer,colors.Length * sizeof(float) * 4, colors, BufferUsageHint.StreamRead);
+            GL.BufferData(BufferTarget.ShaderStorageBuffer, colors.Length * sizeof(float) * 4, colors, BufferUsageHint.StreamRead);
             GL.BindBufferBase(BufferRangeTarget.ShaderStorageBuffer, 0, buf);
             GL.BindBuffer(BufferTarget.ShaderStorageBuffer, 0);
-            
+
 
             glControl.Resize += glControl_Resize;
             glControl.Paint += glControl_Paint;
@@ -157,7 +158,7 @@ namespace Fractals
             _timer.Interval = 15;   // 1000 ms per sec / 15 ms per frame = 60 FPS
             _timer.Start();
             stopwatch.Start();
-            
+
             GL.BindVertexArray(VAO);
 
             glControl_Resize(glControl, EventArgs.Empty);
@@ -170,13 +171,13 @@ namespace Fractals
             GL.Viewport(0, 0, glControl.ClientSize.Width, glControl.ClientSize.Height);
             sameFrame = 0;
         }
-        private void glControl_Paint(object sender, PaintEventArgs e)=>Render();       
-        void Screenshot() 
+        private void glControl_Paint(object sender, PaintEventArgs e) => Render();
+        void Screenshot()
         {
             string path = "screenshots";
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
-            switch (currentFractal) 
+            switch (currentFractal)
             {
                 case Fractal.Mandelbrot:
                     path += "/Mandelbrot_";
@@ -192,9 +193,9 @@ namespace Fractals
                     break;
             }
             //screenshots/FRACTALNAME_TIME.png
-            path += DateTime.Now.ToFileTime() +".png";           
+            path += DateTime.Now.ToFileTime() + ".png";
 
-            using (Bitmap bitmap = new Bitmap(glControl.Width, glControl.Height)) 
+            using (Bitmap bitmap = new Bitmap(glControl.Width, glControl.Height))
             {
                 BitmapData bits = bitmap.LockBits(new Rectangle(0, 0, glControl.Width, glControl.Height), System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
                 GL.ReadPixels(0, 0, glControl.Width, glControl.Height, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, bits.Scan0);
@@ -207,7 +208,7 @@ namespace Fractals
         {
             //glControl.MakeCurrent();
             //Camera stuff
-            
+
             Vector2 fp, cam_delta;
             fp = screen2p(cam_fp);
             zoom = zoom * .8f + zoom_dst * .2f;
@@ -223,23 +224,24 @@ namespace Fractals
                 GL.Uniform1(0, (float)stopwatch.Elapsed.TotalSeconds);
                 GL.Uniform1(2, frame);
             }
-            GL.Uniform4(3,new Vector4( cam.X,cam.Y,1,1));
+            GL.Uniform4(3, new Vector4(cam.X, cam.Y, 1, 1));
             GL.Uniform1(4, (float)zoom);
             GL.Uniform1(5, colors.Length);
             GL.Uniform1(6, sameFrame);
+            GL.Uniform1(7, (int)currentFractal);
             //Draw         
             GL.DrawArrays(PrimitiveType.Quads, 0, 4);
 
-          
+
             glControl.SwapBuffers();
             if (!paused)
                 frame++;
             //glControl.BlendAlph
 
-            
-             double xSpeed = MathF.Abs(cam.X - cam_dst.X) * zoom_dst;
-             double ySpeed = MathF.Abs(cam.X - cam_dst.X) * zoom_dst;
-             double zoomSpeed = MathF.Abs(zoom / zoom_dst - 1.0f);
+
+            double xSpeed = MathF.Abs(cam.X - cam_dst.X) * zoom_dst;
+            double ySpeed = MathF.Abs(cam.X - cam_dst.X) * zoom_dst;
+            double zoomSpeed = MathF.Abs(zoom / zoom_dst - 1.0f);
             if (xSpeed < 0.2 && ySpeed < 0.2 && zoomSpeed < 0.002)
             {
                 frame += 1;
@@ -263,16 +265,7 @@ namespace Fractals
             else
                 stopwatch.Restart();
         }
-        private void calibrationToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            UpdateShader(Calibration);
-            Restart();
-        }
-        private void mainShaderToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            UpdateShader(MainShader);
-            Restart();
-        }
+
         private void toolStripMenuItem1_Click(object sender, EventArgs e) => UpdateShader(currentShader);
         private void toolStripMenuItem2_Click(object sender, EventArgs e) => Restart();
         private void toolStripMenuItem3_Click(object sender, EventArgs e)
@@ -285,5 +278,11 @@ namespace Fractals
         }
 
         private void toolStripMenuItem4_Click(object sender, EventArgs e) => Screenshot();
+
+        private void mandelbrotToolStripMenuItem_Click(object sender, EventArgs e) => currentFractal = Fractal.Mandelbrot;
+        private void burningShipToolStripMenuItem_Click(object sender, EventArgs e) => currentFractal = Fractal.BurningShip;
+        private void tricornToolStripMenuItem_Click(object sender, EventArgs e) => currentFractal = Fractal.Tricorn;
+        private void featherToolStripMenuItem_Click(object sender, EventArgs e) => currentFractal = Fractal.Feather;
+
     }
 }
