@@ -1,4 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  
+  
+  
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -7,7 +10,42 @@
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>8.0</LangVersion>
+    <ApplicationIcon>RES\fract.ico</ApplicationIcon>
+    <SignAssembly>false</SignAssembly>
+    <Win32Resource />
+    <Description>Application for viewing fractals. Runs in realtime on the GPU. Requiers latest opengl version</Description>
+    <Copyright>MIT License</Copyright>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Authors>Ciubx8513(Luna)</Authors>
+    <Company>Ciubx8513 (Luna)</Company>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Release1\**" />
+    <Compile Remove="Release\**" />
+    <EmbeddedResource Remove="Release1\**" />
+    <EmbeddedResource Remove="Release\**" />
+    <None Remove="Release1\**" />
+    <None Remove="Release\**" />
+    <None Include="LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="OpenTK.WinForms.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="OpenTK.WinForms.dll" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="OpenTK" Version="4.6.7" />
@@ -16,6 +54,7 @@
   <ItemGroup>
     <Reference Include="OpenTK.WinForms">
       <HintPath>OpenTK.WinForms.dll</HintPath>
+      <EmbedInteropTypes>false</EmbedInteropTypes>
     </Reference>
   </ItemGroup>
 

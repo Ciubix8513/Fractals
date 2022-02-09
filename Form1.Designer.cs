@@ -76,14 +76,7 @@
             this.mainShaderToolStripMenuItem.Name = "mainShaderToolStripMenuItem";
             this.mainShaderToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.mainShaderToolStripMenuItem.Text = "Main shader";
-            this.mainShaderToolStripMenuItem.Click += new System.EventHandler(this.mainShaderToolStripMenuItem_Click);
-            // 
-            // shaderDataDisplayToolStripMenuItem
-            // 
-            this.shaderDataDisplayToolStripMenuItem.Name = "shaderDataDisplayToolStripMenuItem";
-            this.shaderDataDisplayToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.shaderDataDisplayToolStripMenuItem.Text = "Shader data display";
-            this.shaderDataDisplayToolStripMenuItem.Click += new System.EventHandler(this.shaderDataDisplayToolStripMenuItem_Click);
+            this.mainShaderToolStripMenuItem.Click += new System.EventHandler(this.mainShaderToolStripMenuItem_Click);                     
             // 
             // toolStripMenuItem1
             // 

@@ -32,21 +32,23 @@ namespace Fractals
         Vector2i prevDrag;
 
         Vector4[] colors = new Vector4[] { new Vector4(85, 205, 252, 255), new Vector4(247, 168, 184, 255),new Vector4(255,255,255,255), new  Vector4(247, 168, 184, 255), new Vector4(85, 205, 252, 255) };
+#if DEBUG
+        const string MainShader = "../../../Res/shader.frag";
+        const string Calibration = "../../../Res/Calibration.frag";
+#else
+        const string MainShader = "shader.frag";
+        const string Calibration = "Calibration.frag";
+#endif
         void UpdateColors()
         {
             GL.BindBuffer(BufferTarget.ShaderStorageBuffer, buf);
             GL.BufferSubData(BufferTarget.ShaderStorageBuffer,IntPtr.Zero, colors.Length * sizeof(float) * 4, colors);        
             GL.BindBuffer(BufferTarget.ShaderStorageBuffer, 0);
         }
-        
-        
-        
         Vector2 screen2p(Vector2i c) 
         {
             return new Vector2(c.X - glControl.Width / 2, c.Y - glControl.Height / 2) / zoom - cam;
         }
-
-
         public Form1()
         {
             this.FormClosed += Form1_FormClosed;
@@ -60,13 +62,11 @@ namespace Fractals
             glControl.MouseUp += GlControl_MouseUp;
             glControl.MouseMove += GlControl_MouseMove;
         }
-
         private void GlControl_MouseWheel(object sender, MouseEventArgs e)
         {
             zoom_dst *= MathF.Pow(1.1f, e.Delta / 60);
             cam_fp = new Vector2i(e.X, e.Y);
         }
-
         private void GlControl_MouseUp(object sender, MouseEventArgs e)=>tracking = false;
         private void GlControl_MouseDown(object sender, MouseEventArgs e) { prevDrag = new Vector2i(e.X, e.Y); tracking = true; }
         private void GlControl_MouseMove(object sender, MouseEventArgs e)
@@ -78,7 +78,6 @@ namespace Fractals
                 prevDrag = curDrag;
             }
         }
-
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             shader.Dispose();
@@ -86,7 +85,6 @@ namespace Fractals
             GL.DeleteBuffer(VBO);
             GL.DeleteBuffer(buf);
         }
-
         void UpdateShader(string s)
         {
             currentShader = s;
@@ -98,12 +96,11 @@ namespace Fractals
             shader = new Shader(s);
             shader.Use();
         }
-
         private void glControl_Load(object? sender, EventArgs e)
         {
             stopwatch = new System.Diagnostics.Stopwatch();
             frame = 0;
-            UpdateShader("../../../Res/shader.frag");
+            UpdateShader(MainShader);
             VBO = GL.GenBuffer();
             VAO = GL.GenVertexArray();
 
@@ -146,7 +143,6 @@ namespace Fractals
 
             glControl_Resize(glControl, EventArgs.Empty);
         }
-
         private void glControl_Resize(object? sender, EventArgs e)
         {
             glControl.MakeCurrent();
@@ -155,9 +151,7 @@ namespace Fractals
             GL.Viewport(0, 0, glControl.ClientSize.Width, glControl.ClientSize.Height);
             
         }
-
-        private void glControl_Paint(object sender, PaintEventArgs e)=>Render();
-        
+        private void glControl_Paint(object sender, PaintEventArgs e)=>Render();        
         private void Render()
         {
             //glControl.MakeCurrent();
@@ -203,12 +197,12 @@ namespace Fractals
         }
         private void calibrationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            UpdateShader("../../../Res/Calibration.frag");
+            UpdateShader(Calibration);
             Restart();
         }
         private void mainShaderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            UpdateShader("../../../Res/shader.frag");
+            UpdateShader(MainShader);
             Restart();
         }
         private void toolStripMenuItem1_Click(object sender, EventArgs e) => UpdateShader(currentShader);
@@ -221,9 +215,5 @@ namespace Fractals
                 stopwatch.Stop();
             paused = !paused;
         }
-
-        private void shaderDataDisplayToolStripMenuItem_Click(object sender, EventArgs e)=>UpdateShader("../../../Res/data.frag");
-
-       
     }
 }
