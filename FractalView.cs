@@ -5,49 +5,51 @@ using System.IO;
 using System.Windows.Forms;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
-using OpenTK.WinForms;
-using OpenTK.Core;
-
+using System.Runtime.CompilerServices;
 
 namespace Fractals
 {
-    public partial class Form1 : Form
+    
+    public partial class FractalView : Form
     {
+        
         enum Fractal
         {
             Mandelbrot = 1,
             BurningShip = 2,
             Tricorn = 4,
-            Feather =8
+            Feather = 8,
+            Eye = 16
         }
-
-        private Timer _timer = null!;
+        //openGL stuff
         int VBO; //Vertex buffer object
         int VAO; //Vertex array object
         int buf;
-        int frame;
         Shader shader;
+        string currentShader;
+        //Uniforms
+        public Vector4[] colors = new Vector4[] { new Vector4(85, 205, 252, 255), new Vector4(247, 168, 184, 255), new Vector4(255, 255, 255, 255), new Vector4(247, 168, 184, 255), new Vector4(85, 205, 252, 255) };
+        private Timer _timer = null!;
+        int frame;
         System.Diagnostics.Stopwatch stopwatch;
         bool paused = false;
-        string currentShader;
+        Fractal f = Fractal.Mandelbrot;
+        Fractal currentFractal { get { return f; } set { f = value; Restart(); } }
+        int mI = 1000; 
+        public int MaxIter { get { return mI; }set { mI = value; sameFrame = 0; } }
+        int cNum = 200;
+        public int colorNum { get { return cNum; } set { cNum = value;sameFrame = 0; } }
+        //Camera
         bool tracking = false;
         Vector2 position;
         Vector2 prevM;
         float zoom = 1000.0f;
-
         int sameFrame = 0;
-
         float zoom_dst;
         Vector2 cam;
         Vector2i cam_fp;
         Vector2 cam_dst;
         Vector2i prevDrag;
-
-        Fractal f = Fractal.Mandelbrot;
-        Fractal currentFractal { get { return f; }set { f = value; Restart(); } }
-
-
-        Vector4[] colors = new Vector4[] { new Vector4(85, 205, 252, 255), new Vector4(247, 168, 184, 255), new Vector4(255, 255, 255, 255), new Vector4(247, 168, 184, 255), new Vector4(85, 205, 252, 255) };
 #if DEBUG
         const string MainShader = "../../../Res/shader.frag";
         const string Calibration = "../../../Res/Calibration.frag";
@@ -55,8 +57,8 @@ namespace Fractals
         const string MainShader = "shader.frag";
         const string Calibration = "Calibration.frag";
 #endif
-        void UpdateColors()
-        {
+        public void UpdateColors()
+        {           
             sameFrame = 0;
             GL.BindBuffer(BufferTarget.ShaderStorageBuffer, buf);
             GL.BufferSubData(BufferTarget.ShaderStorageBuffer, IntPtr.Zero, colors.Length * sizeof(float) * 4, colors);
@@ -66,7 +68,7 @@ namespace Fractals
         {
             return new Vector2(c.X - glControl.Width / 2, c.Y - glControl.Height / 2) / zoom - cam;
         }
-        public Form1()
+        public FractalView()
         {
             this.FormClosed += Form1_FormClosed;
             position = new Vector2(0, 0);
@@ -191,6 +193,9 @@ namespace Fractals
                 case Fractal.Feather:
                     path += "/Feather_";
                     break;
+                case Fractal.Eye:
+                    path += "/Eye_";
+                    break;
             }
             //screenshots/FRACTALNAME_TIME.png
             path += DateTime.Now.ToFileTime() + ".png";
@@ -205,10 +210,8 @@ namespace Fractals
             }
         }
         private void Render()
-        {
-            //glControl.MakeCurrent();
+        {            
             //Camera stuff
-
             Vector2 fp, cam_delta;
             fp = screen2p(cam_fp);
             zoom = zoom * .8f + zoom_dst * .2f;
@@ -229,28 +232,23 @@ namespace Fractals
             GL.Uniform1(5, colors.Length);
             GL.Uniform1(6, sameFrame);
             GL.Uniform1(7, (int)currentFractal);
+            GL.Uniform1(8, MaxIter);
+            GL.Uniform1(9, colorNum);
             //Draw         
             GL.DrawArrays(PrimitiveType.Quads, 0, 4);
-
 
             glControl.SwapBuffers();
             if (!paused)
                 frame++;
-            //glControl.BlendAlph
 
-
+            //More camera stuff
             double xSpeed = MathF.Abs(cam.X - cam_dst.X) * zoom_dst;
             double ySpeed = MathF.Abs(cam.X - cam_dst.X) * zoom_dst;
             double zoomSpeed = MathF.Abs(zoom / zoom_dst - 1.0f);
-            if (xSpeed < 0.2 && ySpeed < 0.2 && zoomSpeed < 0.002)
-            {
-                frame += 1;
-            }
-            else
-            {
+            if (xSpeed < 0.2 && ySpeed < 0.2 && zoomSpeed < 0.002)            
+                frame += 1;            
+            else            
                 frame = 1;
-            }
-
         }
         void Restart()
         {
@@ -268,7 +266,7 @@ namespace Fractals
 
         private void toolStripMenuItem1_Click(object sender, EventArgs e) => UpdateShader(currentShader);
         private void toolStripMenuItem2_Click(object sender, EventArgs e) => Restart();
-        private void toolStripMenuItem3_Click(object sender, EventArgs e)
+        private void toolStripMenuItem3_Click(object sender, EventArgs e)//Pause
         {
             if (paused)
                 stopwatch.Start();
@@ -276,13 +274,23 @@ namespace Fractals
                 stopwatch.Stop();
             paused = !paused;
         }
-
         private void toolStripMenuItem4_Click(object sender, EventArgs e) => Screenshot();
-
+        //Fractal changes
         private void mandelbrotToolStripMenuItem_Click(object sender, EventArgs e) => currentFractal = Fractal.Mandelbrot;
         private void burningShipToolStripMenuItem_Click(object sender, EventArgs e) => currentFractal = Fractal.BurningShip;
         private void tricornToolStripMenuItem_Click(object sender, EventArgs e) => currentFractal = Fractal.Tricorn;
         private void featherToolStripMenuItem_Click(object sender, EventArgs e) => currentFractal = Fractal.Feather;
+        private void eyeToolStripMenuItem_Click(object sender, EventArgs e) => currentFractal = Fractal.Eye;
 
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FractalEdit edit = new FractalEdit();
+            edit.fractalView = this;
+            FormClosing += (s,args) => edit.Close();
+            edit.GetValues();
+            edit.Show();
+        }
+
+        
     }
 }

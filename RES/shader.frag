@@ -12,7 +12,8 @@ layout(location = 4) uniform float zoom;
 layout(location = 5) uniform int arrLength;
 layout(location = 6)uniform int Time;
 layout (location =7) uniform int cFractal;
-
+layout(location = 8) uniform int maxIteration;
+layout(location = 9) uniform int colorNum;
 layout (std430,binding = 0) buffer colors
 {
     vec4 cols[]; 
@@ -33,7 +34,7 @@ vec4 GetColor(vec2 uv,float i,float maxI)
 {
     if(i == maxI)
         return vec4(0);
-    return getCol((maxI * .15 + i)  / maxI,200) / 255;
+    return getCol((maxI * .15 + i)  / maxI,colorNum) / 255;
 }
 
 vec2 complexPow(vec2 z, float n)
@@ -53,6 +54,11 @@ vec2 complexDiv(vec2 a,vec2 b)
     return vec2((a.x *b.x + a.y * b.y )/(b.x*b.x + b.y*b.y),(a.y * b.x - a.x *b.y) / (b.x*b.x + b.y*b.y));
 }
 
+vec2 complexSquare(vec2 z)
+{
+return vec2(z.x *z.x - z.y*z.y,2. * z.x * z.y);
+}
+
 
 vec2 mandelbrot(vec2 z, vec2 c)
 {
@@ -66,12 +72,14 @@ vec2 mandelbrot(vec2 z, vec2 c)
 vec2 BurningShip(vec2 z,vec2 c)
 {
     z = abs(z);
-    return vec2(z.x *z.x - z.y*z.y,2. * z.x * z.y)+ c; //z is a complex number Z^2 + C
+    return complexSquare(z)+ c; //z is a complex number Z^2 + C
 }
 
 vec2 Tricorn(vec2 z ,vec2 c )
 {
-    return vec2(z.x *z.x - z.y*z.y,-2. * z.x * z.y)+ c; //z is a complex number Z^2 + C
+    z *= vec2(1,-1);
+    
+    return complexSquare(z)+ c; //z is a complex number Z^2 + C
 }
 
 vec2 Feather(vec2 z,vec2 c)
@@ -79,16 +87,22 @@ vec2 Feather(vec2 z,vec2 c)
     return complexDiv(complexCube(z) , (vec2(1,0) + (z*z))) + c;
 }
 
+vec2 Eye(vec2 z, vec2 c)
+{
+    return complexSquare(complexDiv(z,c))- c; //(z/c)^2 - c
+
+}
+
 
 vec4 fractal(vec2 C)
 {
     vec2 coords = vec2(0);      
     int iter = 0;
-    int maxIter = 1000;
+    int maxIter = maxIteration;
     //maxIter = int(min(iTime / 10, 1200));
     float maxDot = 4.0;
-    if((cFractal & 8) == 8)
-    maxDot = 10000.0;
+    if((cFractal & 8) > 0 ||(cFractal & 16) >0)
+    maxDot = 2000.0;
     while(dot(coords,coords)<=maxDot && iter < maxIter)
     {       
         if((cFractal & 1) == 1)
@@ -99,6 +113,8 @@ vec4 fractal(vec2 C)
         coords = Tricorn(coords,C );
         if((cFractal & 8) == 8)
         coords = Feather(coords,C );        
+         if((cFractal & 16) == 16)
+        coords = Eye(coords,C ); 
         iter++;
     }    
     if(coords ==vec2(6.9,420)) //To skip the main bulb or any other similar things
