@@ -56,9 +56,14 @@ vec2 complexDiv(vec2 a,vec2 b)
 
 vec2 complexSquare(vec2 z)
 {
-return vec2(z.x *z.x - z.y*z.y,2. * z.x * z.y);
+    return vec2(z.x *z.x - z.y*z.y,2. * z.x * z.y);
 }
 
+vec2 complexSQRT(vec2 z)
+{
+    float l = length(z);
+    return vec2(sqrt((l + z.x )/ 2),sign(z.y) * sqrt((l - z.x ) / 2));
+}
 
 vec2 mandelbrot(vec2 z, vec2 c)
 {
@@ -66,7 +71,7 @@ vec2 mandelbrot(vec2 z, vec2 c)
     float c2 = dot(c,c);
     if( 256.0*c2*c2 - 96.0*c2 + 32.0*c.x - 3.0 < 0.0 ) return vec2(6.9,420);
     if( 16.0*(c2+2.0*c.x+1.0) - 1.0 < 0.0 ) return vec2(6.9,420);
-    return vec2(z.x *z.x - z.y*z.y,2. * z.x * z.y)+ c; //z is a complex number Z^2 + C
+    return complexSquare(z)+ c; //z is a complex number Z^2 + C
 }
 
 vec2 BurningShip(vec2 z,vec2 c)
@@ -77,8 +82,7 @@ vec2 BurningShip(vec2 z,vec2 c)
 
 vec2 Tricorn(vec2 z ,vec2 c )
 {
-    z *= vec2(1,-1);
-    
+    z *= vec2(1,-1);    
     return complexSquare(z)+ c; //z is a complex number Z^2 + C
 }
 
@@ -89,8 +93,7 @@ vec2 Feather(vec2 z,vec2 c)
 
 vec2 Eye(vec2 z, vec2 c)
 {
-    return complexSquare(complexDiv(z,c))- c; //(z/c)^2 - c
-
+   return complexSquare(complexDiv(z,c ))+ c; //(z/c)^2 - c
 }
 
 
@@ -103,29 +106,27 @@ vec4 fractal(vec2 C)
     float maxDot = 4.0;
     if((cFractal & 8) > 0 ||(cFractal & 16) >0)
     maxDot = 2000.0;
+    
     while(dot(coords,coords)<=maxDot && iter < maxIter)
-    {       
+    {    
         if((cFractal & 1) == 1)
-        coords = mandelbrot(coords,C );
+            coords = mandelbrot(coords,C );
         if((cFractal & 2) == 2)
-        coords = BurningShip(coords,C );
+            coords = BurningShip(coords,C );
         if((cFractal & 4) == 4)
-        coords = Tricorn(coords,C );
+            coords = Tricorn(coords,C );
         if((cFractal & 8) == 8)
-        coords = Feather(coords,C );        
-         if((cFractal & 16) == 16)
-        coords = Eye(coords,C ); 
+            coords = Feather(coords,C );        
+        if((cFractal & 16) == 16)
+            coords = Eye(coords,C ); 
         iter++;
-    }    
+    } 
     if(coords ==vec2(6.9,420)) //To skip the main bulb or any other similar things
         iter = maxIter;
     return GetColor(C,float(iter) , float(maxIter));
 }
 
-float rand(float s)
-{
-    return fract(sin(s*12.9898) * 43758.5453);
-}
+float rand(float s){return fract(sin(s*12.9898) * 43758.5453);}
 
 void main( )
 {   
