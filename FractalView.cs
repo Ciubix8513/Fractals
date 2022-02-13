@@ -22,14 +22,10 @@ namespace Fractals
         int VBO; //Vertex buffer object
         int VAO; //Vertex array object
         int buf;
-        Shader shader;
-        string currentShader;
+        Shader shader;        
         //Uniforms
         public Vector4[] colors = new Vector4[] { new Vector4(85, 205, 252, 255), new Vector4(247, 168, 184, 255), new Vector4(255, 255, 255, 255), new Vector4(247, 168, 184, 255), new Vector4(85, 205, 252, 255) };
         private Timer _timer = null!;
-        int frame;
-        System.Diagnostics.Stopwatch stopwatch;
-        bool paused = false;
         Fractal f = Fractal.Mandelbrot;
         Fractal currentFractal { get { return f; } set { f = value; Restart(); } }
         int mI = 1000; 
@@ -105,20 +101,15 @@ namespace Fractals
             GL.DeleteBuffer(buf);
         }
         void UpdateShader(string s)
-        {
-            currentShader = s;
-            sameFrame = 0;
-            if (stopwatch.IsRunning)
-                stopwatch.Restart();
+        {            
+            sameFrame = 0;            
             if (shader != null)
                 shader.Dispose();//Dispose first
             shader = new Shader(s);
             shader.Use();
         }
         private void glControl_Load(object? sender, EventArgs e)
-        {
-            stopwatch = new System.Diagnostics.Stopwatch();
-            frame = 0;
+        {            
             UpdateShader(MainShader);
             VBO = GL.GenBuffer();
             VAO = GL.GenVertexArray();
@@ -151,9 +142,8 @@ namespace Fractals
             // Redraw the screen every 1/60 of a second.
             _timer = new Timer();
             _timer.Tick += (sender, e) =>{Render();};
-            _timer.Interval =1000/ 30;   //1000 ms / fps
-            _timer.Start();
-            stopwatch.Start();
+            _timer.Interval =1000/ 60;   //1000 ms / fps
+            _timer.Start();       
 
             GL.BindVertexArray(VAO);
 
@@ -216,11 +206,7 @@ namespace Fractals
 
             //Set uniforms
             GL.Uniform3(1, new Vector3(glControl.ClientSize.Width, glControl.ClientSize.Height, 1.0f));
-            if (!paused)//Updated uniforms only when not paused
-            {
-                GL.Uniform1(0, (float)stopwatch.Elapsed.TotalSeconds);
-                GL.Uniform1(2, frame);
-            }
+            
             GL.Uniform4(3, new Vector4(cam.X, cam.Y, 1, 1));
             GL.Uniform1(4, (float)zoom);
             GL.Uniform1(5, colors.Length);
@@ -231,18 +217,7 @@ namespace Fractals
             //Draw         
             GL.DrawArrays(PrimitiveType.Quads, 0, 4);
 
-            glControl.SwapBuffers();
-            if (!paused)
-                frame++;
-
-            //More camera stuff
-            double xSpeed = MathF.Abs(cam.X - cam_dst.X) * zoom_dst;
-            double ySpeed = MathF.Abs(cam.X - cam_dst.X) * zoom_dst;
-            double zoomSpeed = MathF.Abs(zoom / zoom_dst - 1.0f);
-            if (xSpeed < 0.2 && ySpeed < 0.2 && zoomSpeed < 0.002)            
-                frame += 1;            
-            else            
-                frame = 1;
+            glControl.SwapBuffers();        
         }
         void Restart()
         {
@@ -251,22 +226,8 @@ namespace Fractals
             position = Vector2.Zero;
             prevM = Vector2.Zero; ;
             sameFrame = 0;
-            frame = 0;
-            if (paused)
-                stopwatch.Reset();
-            else
-                stopwatch.Restart();
-        }
-        private void toolStripMenuItem1_Click(object sender, EventArgs e) => UpdateShader(currentShader);
-        private void toolStripMenuItem2_Click(object sender, EventArgs e) => Restart();
-        private void toolStripMenuItem3_Click(object sender, EventArgs e)//Pause
-        {
-            if (paused)
-                stopwatch.Start();
-            else
-                stopwatch.Stop();
-            paused = !paused;
-        }
+         
+        }      
         private void toolStripMenuItem4_Click(object sender, EventArgs e) => Screenshot();
         //Fractal changes
         private void mandelbrotToolStripMenuItem_Click(object sender, EventArgs e) => currentFractal = Fractal.Mandelbrot;
@@ -281,6 +242,8 @@ namespace Fractals
             FormClosing += (s,args) => edit.Close();
             edit.GetValues();
             edit.Show();
-        }        
+        }
+        private void resetToolStripMenuItem_Click(object sender, EventArgs e) => Restart();
+        
     }
 }

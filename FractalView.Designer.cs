@@ -35,13 +35,11 @@
             this.burningShipToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tricornToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.featherToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.eyeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.glControl = new OpenTK.WinForms.GLControl();
-            this.eyeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -49,11 +47,9 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.reloadToolStripMenuItem,
-            this.toolStripMenuItem1,
-            this.toolStripMenuItem2,
-            this.toolStripMenuItem3,
             this.toolStripMenuItem4,
-            this.settingsToolStripMenuItem});
+            this.settingsToolStripMenuItem,
+            this.resetToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(919, 24);
@@ -75,51 +71,37 @@
             // mandelbrotToolStripMenuItem
             // 
             this.mandelbrotToolStripMenuItem.Name = "mandelbrotToolStripMenuItem";
-            this.mandelbrotToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.mandelbrotToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.mandelbrotToolStripMenuItem.Text = "Mandelbrot";
             this.mandelbrotToolStripMenuItem.Click += new System.EventHandler(this.mandelbrotToolStripMenuItem_Click);
             // 
             // burningShipToolStripMenuItem
             // 
             this.burningShipToolStripMenuItem.Name = "burningShipToolStripMenuItem";
-            this.burningShipToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.burningShipToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.burningShipToolStripMenuItem.Text = "Burning ship";
             this.burningShipToolStripMenuItem.Click += new System.EventHandler(this.burningShipToolStripMenuItem_Click);
             // 
             // tricornToolStripMenuItem
             // 
             this.tricornToolStripMenuItem.Name = "tricornToolStripMenuItem";
-            this.tricornToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.tricornToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.tricornToolStripMenuItem.Text = "Tricorn";
             this.tricornToolStripMenuItem.Click += new System.EventHandler(this.tricornToolStripMenuItem_Click);
             // 
             // featherToolStripMenuItem
             // 
             this.featherToolStripMenuItem.Name = "featherToolStripMenuItem";
-            this.featherToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.featherToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.featherToolStripMenuItem.Text = "Feather";
             this.featherToolStripMenuItem.Click += new System.EventHandler(this.featherToolStripMenuItem_Click);
             // 
-            // toolStripMenuItem1
+            // eyeToolStripMenuItem
             // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(55, 20);
-            this.toolStripMenuItem1.Text = "Reload";
-            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
-            // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(35, 20);
-            this.toolStripMenuItem2.Text = "<<";
-            this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
-            // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(28, 20);
-            this.toolStripMenuItem3.Text = "| |";
-            this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
+            this.eyeToolStripMenuItem.Name = "eyeToolStripMenuItem";
+            this.eyeToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.eyeToolStripMenuItem.Text = "Eye";
+            this.eyeToolStripMenuItem.Click += new System.EventHandler(this.eyeToolStripMenuItem_Click);
             // 
             // toolStripMenuItem4
             // 
@@ -152,12 +134,12 @@
             this.glControl.Text = "glControl1";
             this.glControl.Load += new System.EventHandler(this.glControl_Load);
             // 
-            // eyeToolStripMenuItem
+            // resetToolStripMenuItem
             // 
-            this.eyeToolStripMenuItem.Name = "eyeToolStripMenuItem";
-            this.eyeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.eyeToolStripMenuItem.Text = "Eye";
-            this.eyeToolStripMenuItem.Click += new System.EventHandler(this.eyeToolStripMenuItem_Click);
+            this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
+            this.resetToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
+            this.resetToolStripMenuItem.Text = "Reset";
+            this.resetToolStripMenuItem.Click += new System.EventHandler(this.resetToolStripMenuItem_Click);
             // 
             // FractalView
             // 
@@ -181,9 +163,6 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private OpenTK.WinForms.GLControl glControl;
         private System.Windows.Forms.ToolStripMenuItem reloadToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
         private System.Windows.Forms.ToolStripMenuItem mandelbrotToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem burningShipToolStripMenuItem;
@@ -191,6 +170,7 @@
         private System.Windows.Forms.ToolStripMenuItem featherToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem eyeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem resetToolStripMenuItem;
     }
 }
 

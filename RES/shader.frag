@@ -3,9 +3,7 @@
 #pragma optionNV(fastprecision off)
 out vec4 FragColor;
 
-layout(location = 0 ) uniform float iTime = 0;
 layout(location = 1)  uniform vec3 iResolution;
-layout(location = 2) uniform int iFrame;
 layout(location = 3) uniform vec4 iMouse;
 layout(location = 4) uniform float zoom;
 layout(location = 5) uniform int arrLength;
