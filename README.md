@@ -17,7 +17,3 @@ Current fractals:
  - Feather ((z^3 / 1 + z * z) + c)
  - Eye ((z/c)^2 - c)
  
-Some future features:
- - More fractals
- - Some settings for the way fractals are rendered
-
