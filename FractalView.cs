@@ -151,7 +151,7 @@ namespace Fractals
             // Redraw the screen every 1/60 of a second.
             _timer = new Timer();
             _timer.Tick += (sender, e) =>{Render();};
-            _timer.Interval =1000/ 30;   //1000 ms / fps
+            _timer.Interval =1000/ 60;   //1000 ms / fps
             _timer.Start();
             stopwatch.Start();
 
