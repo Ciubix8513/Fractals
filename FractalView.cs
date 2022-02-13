@@ -5,14 +5,11 @@ using System.IO;
 using System.Windows.Forms;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
-using System.Runtime.CompilerServices;
 
 namespace Fractals
-{
-    
+{    
     public partial class FractalView : Form
-    {
-        
+    {        
         enum Fractal
         {
             Mandelbrot = 1,
@@ -153,11 +150,8 @@ namespace Fractals
             Restart();
             // Redraw the screen every 1/60 of a second.
             _timer = new Timer();
-            _timer.Tick += (sender, e) =>
-            {
-                Render();
-            };
-            _timer.Interval = 15;   // 1000 ms per sec / 15 ms per frame = 60 FPS
+            _timer.Tick += (sender, e) =>{Render();};
+            _timer.Interval =1000/ 30;   //1000 ms / fps
             _timer.Start();
             stopwatch.Start();
 
@@ -263,7 +257,6 @@ namespace Fractals
             else
                 stopwatch.Restart();
         }
-
         private void toolStripMenuItem1_Click(object sender, EventArgs e) => UpdateShader(currentShader);
         private void toolStripMenuItem2_Click(object sender, EventArgs e) => Restart();
         private void toolStripMenuItem3_Click(object sender, EventArgs e)//Pause
@@ -281,7 +274,6 @@ namespace Fractals
         private void tricornToolStripMenuItem_Click(object sender, EventArgs e) => currentFractal = Fractal.Tricorn;
         private void featherToolStripMenuItem_Click(object sender, EventArgs e) => currentFractal = Fractal.Feather;
         private void eyeToolStripMenuItem_Click(object sender, EventArgs e) => currentFractal = Fractal.Eye;
-
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FractalEdit edit = new FractalEdit();
@@ -289,8 +281,6 @@ namespace Fractals
             FormClosing += (s,args) => edit.Close();
             edit.GetValues();
             edit.Show();
-        }
-
-        
+        }        
     }
 }

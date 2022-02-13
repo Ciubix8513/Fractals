@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Fractals
@@ -17,14 +13,12 @@ namespace Fractals
             InitializeComponent();            
             propertyGrid1.PropertyValueChanged += PropertyGrid1_PropertyValueChanged;
         }
-
         private void PropertyGrid1_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
             fractalView.colors = new OpenTK.Mathematics.Vector4[data.colors.Length];
             for (int i = 0; i < fractalView.colors.Length; i++)            
                 fractalView.colors[i] = new OpenTK.Mathematics.Vector4(data.colors[i].R, data.colors[i].G, data.colors[i].B, data.colors[i].A);
-            fractalView.UpdateColors();
-            
+            fractalView.UpdateColors();            
         }
         public void GetValues() 
         {
@@ -35,13 +29,11 @@ namespace Fractals
             data = new Data(fractalView.colors);
             propertyGrid1.SelectedObject = data;
         }
-
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
             fractalView.MaxIter = trackBar1.Value;
             label1.Text = "Max iterations: " + trackBar1.Value.ToString();
         }
-
         private void trackBar2_Scroll(object sender, EventArgs e)
         {
             fractalView.colorNum = trackBar2.Value;
@@ -55,8 +47,7 @@ namespace Fractals
         {
             colors = new Color[cs.Length];
             for (int i = 0; i < cs.Length; i++)            
-                colors[i] = Color.FromArgb((int)cs[i].X, (int)cs[i].Y, (int)cs[i].Z);
-            
+                colors[i] = Color.FromArgb((int)cs[i].X, (int)cs[i].Y, (int)cs[i].Z);            
         }
         public Color[] colors { get; set; }
     }

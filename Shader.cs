@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using OpenTK.Graphics.OpenGL;
-using OpenTK.Mathematics;
 using System.Text;
 using System;
 using System.Windows.Forms;
@@ -13,7 +12,6 @@ namespace Fractals
         int VertShader;
         int FragShader;
         bool disposedValue = false;
-
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
@@ -22,12 +20,7 @@ namespace Fractals
                 disposedValue = true;
             }
         }
-
-        ~Shader()
-        {
-            GL.DeleteProgram(Handle);
-        }
-
+        ~Shader()=>GL.DeleteProgram(Handle);
         public void Dispose()
         {
             Dispose(true);
@@ -119,9 +112,6 @@ namespace Fractals
             GL.DeleteShader(VertShader);
             GL.DeleteShader(FragShader);
         }
-        public void Use()
-        {
-            GL.UseProgram(Handle);
-        }
+        public void Use()=>GL.UseProgram(Handle);        
     }
 }
