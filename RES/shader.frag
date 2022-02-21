@@ -1,4 +1,4 @@
-﻿#version 460
+﻿#version 430
 #pragma optionNV(fastmath off)
 #pragma optionNV(fastprecision off)
 out vec4 FragColor;
