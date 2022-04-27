@@ -1,4 +1,4 @@
-﻿#version 460
+﻿#version 430
 #pragma optionNV(fastmath off)
 #pragma optionNV(fastprecision off)
 out vec4 FragColor;
@@ -7,10 +7,11 @@ layout(location = 1)  uniform vec3 iResolution;
 layout(location = 3) uniform vec4 iMouse;
 layout(location = 4) uniform float zoom;
 layout(location = 5) uniform int arrLength;
-layout(location = 6)uniform int Time;
+
 layout (location =7) uniform int cFractal;
 layout(location = 8) uniform int maxIteration;
 layout(location = 9) uniform int colorNum;
+layout(location = 10) uniform int MSAA;
 layout (std430,binding = 0) buffer colors{vec4 cols[];};
 
 float rand(float s){return fract(sin(s*12.9898) * 43758.5453);}
@@ -117,15 +118,15 @@ vec4 fractal(vec2 C)
 void main( )
 {   
     vec2 uv = gl_FragCoord.xy - (iResolution.xy *.5);
-    int AA = 1;
+    int AA = max(MSAA,1);
     vec4 col;
     for(int i = 0; i< AA; i++)
     {
-        vec2 dxy = vec2(rand(i*.54321 + Time),rand(i*0.12345 + Time)  );        
+        vec2 dxy = vec2(rand(i*.54321 ),rand(i*0.12345)  );        
         vec2 c = vec2((uv + dxy) * vec2(1.0,-1.0) /zoom- iMouse.xy );        
         col += fractal(c);    
     }
     col /= AA;
 
-    FragColor = vec4(clamp(col.xyz,0,1),1.0/(Time + 1.0));
+    FragColor = col;
 };

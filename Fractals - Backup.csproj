@@ -5,7 +5,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -40,7 +40,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="OpenTK.GLControl" Version="3.1.0" />
+    <None Remove="OpenTK.WinForms.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="OpenTK.WinForms.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OpenTK" Version="4.6.7" />
   </ItemGroup>
 
   <ItemGroup>

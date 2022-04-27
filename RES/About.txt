@@ -1,0 +1,8 @@
+Realtime fractal viewer
+
+License: MIT (check License.md)
+
+Use lmb to move around
+Use scroll wheel to zoom
+
+
