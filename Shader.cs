@@ -8,9 +8,12 @@ namespace Fractals
 {
     public class Shader : IDisposable
     {
+        //OpenGL ptrs
         int Handle;
         int VertShader;
         int FragShader;
+
+        //Clean up
         bool disposedValue = false;
         protected virtual void Dispose(bool disposing)
         {
@@ -33,6 +36,7 @@ namespace Fractals
             FragShader = 0;
             Handle = 0;
             string vSrc;
+            //Read shader files
             using (StreamReader reader = new StreamReader(vert, Encoding.UTF8))
             {
                 vSrc = reader.ReadToEnd();
@@ -42,12 +46,12 @@ namespace Fractals
             {
                 fSrc = reader.ReadToEnd();
             }
-
+            //Asign shader code to created shader ptrs
             VertShader = GL.CreateShader(ShaderType.VertexShader);
             GL.ShaderSource(VertShader, vSrc);
             FragShader = GL.CreateShader(ShaderType.FragmentShader);
             GL.ShaderSource(FragShader, fSrc);
-
+            //Compile shaders
             GL.CompileShader(VertShader);
             string LogV = GL.GetShaderInfoLog(VertShader);
             if (LogV.Length > 0)
@@ -63,7 +67,7 @@ namespace Fractals
                 MessageBox.Show(LogF);
             }
             Handle = GL.CreateProgram();
-
+            //Link shaders
             GL.AttachShader(Handle, VertShader);
             GL.AttachShader(Handle, FragShader);
             GL.LinkProgram(Handle);
@@ -73,12 +77,13 @@ namespace Fractals
             GL.DeleteShader(VertShader);
             GL.DeleteShader(FragShader);
         }
-
+        //Same as the one above except it has a predetirmined vertex shader
         public Shader( string frag)
         {
             VertShader = 0;
             FragShader = 0;
             Handle = 0;
+            //Just pass the data onto the frag shader
             string vSrc = "#version 330\nlayout (location = 0) in vec3 Pos;void main(){gl_Position = vec4(Pos,1.0);}";
 
             string fSrc;
@@ -112,6 +117,7 @@ namespace Fractals
             GL.DeleteShader(VertShader);
             GL.DeleteShader(FragShader);
         }
+
         public void Use()=>GL.UseProgram(Handle);        
     }
 }

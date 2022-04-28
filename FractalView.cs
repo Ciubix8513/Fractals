@@ -21,13 +21,13 @@ namespace Fractals
         }
 
         //openGL stuff
-        private int VBO; //Vertex buffer object
-
+        //Vertex buffer object
+        private int VBO; 
         //Vertex array object
         private int VAO;
-
         //Color buffer
         private int buf;
+
 
         private Shader shader = null!;
 
@@ -146,7 +146,7 @@ namespace Fractals
             VBO = GL.GenBuffer();
             VAO = GL.GenVertexArray();
 
-            //Init vbo
+            //Init VBO
             //Set up vertices
             float[] Vertices = {
                 -1.0f,-1.0f, 0.0f,
@@ -184,7 +184,7 @@ namespace Fractals
 
         private void glControl_Resize(object sender, EventArgs e)
         {
-            //Chaqe the opengl viewport size when resizing the window
+            //Change the opengl viewport size when resizing the window
             glControl.MakeCurrent();
             if (glControl.ClientSize.Height == 0)
                 glControl.ClientSize = new System.Drawing.Size(glControl.ClientSize.Width, 1);
@@ -225,7 +225,7 @@ namespace Fractals
             //Get the data from the color buffer and save it to a bitmap
             using (Bitmap bitmap = new Bitmap(glControl.Width, glControl.Height))
             {
-                BitmapData bits = bitmap.LockBits(new Rectangle(0, 0, glControl.Width, glControl.Height), System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                BitmapData bits = bitmap.LockBits(new Rectangle(0, 0, glControl.Width, glControl.Height), System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppRgb);
                 GL.ReadPixels(0, 0, glControl.Width, glControl.Height, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, bits.Scan0);
                 bitmap.UnlockBits(bits);
                 bitmap.RotateFlip(RotateFlipType.Rotate180FlipX);
@@ -271,7 +271,7 @@ namespace Fractals
 
         private void toolStripMenuItem4_Click(object sender, EventArgs e) => Screenshot();
 
-        //Fractal changes
+        //Fractal selection
         private void mandelbrotToolStripMenuItem_Click(object sender, EventArgs e) => currentFractal = Fractal.Mandelbrot;
 
         private void burningShipToolStripMenuItem_Click(object sender, EventArgs e) => currentFractal = Fractal.BurningShip;
@@ -282,9 +282,10 @@ namespace Fractals
 
         private void eyeToolStripMenuItem_Click(object sender, EventArgs e) => currentFractal = Fractal.Eye;
 
+
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //Focus on the if window it's already opened
+            //Focus on the window if it's already opened
             if (settings != null)
             {
                 settings.BringToFront(); return;

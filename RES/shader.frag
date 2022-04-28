@@ -1,13 +1,13 @@
 ﻿#version 430
 #pragma optionNV(fastmath off)
 #pragma optionNV(fastprecision off)
+//output of the shader
 out vec4 FragColor;
-
+//Data recieved from the cpu
 layout(location = 1)  uniform vec3 iResolution;
 layout(location = 3) uniform vec4 iMouse;
 layout(location = 4) uniform float zoom;
 layout(location = 5) uniform int arrLength;
-
 layout (location =7) uniform int cFractal;
 layout(location = 8) uniform int maxIteration;
 layout(location = 9) uniform int colorNum;
@@ -44,6 +44,7 @@ vec2 complexSQRT(vec2 z)
 //Fractal functions
 vec2 mandelbrot(vec2 z, vec2 c)
 {
+    //Don't render the main bulb
     //Thanks IQ  https://iquilezles.org/www/articles/mset_1bulb/mset1bulb.htm
     float c2 = dot(c,c);
     if( 256.0*c2*c2 - 96.0*c2 + 32.0*c.x - 3.0 < 0.0 ) return vec2(6.9,420);
@@ -66,6 +67,7 @@ vec2 Feather(vec2 z,vec2 c)
 }
 vec2 Eye(vec2 z, vec2 c)
 {
+    if(length(c) > 5.0) return vec2(6.9,420);
    return complexSquare(complexDiv(z,c ))+ c; //(z/c)^2 - c
 }
 
@@ -84,7 +86,7 @@ vec4 GetColor(vec2 uv,float i,float maxI)
 {
     if(i == maxI)
         return vec4(0);
-    return getCol((maxI * .15 + i)  / maxI,colorNum) / 255;
+    return getCol(i/ maxI,colorNum) / 255.0;
 }
 
 //Main functions
@@ -92,12 +94,10 @@ vec4 fractal(vec2 C)
 {
     vec2 coords = vec2(0);      
     int iter = 0;
-    int maxIter = maxIteration;    
-    float maxDot = 4.0;
-    if((cFractal & 8) > 0 ||(cFractal & 16) >0)
-    maxDot = 2000.0;
+    //Bigger max length if viewing feather or eye fractals
+    float maxDot = ((cFractal & 8) > 0 ||(cFractal & 16) >0) ? 2000.0 :4.0; 
     
-    while(dot(coords,coords)<=maxDot && iter < maxIter)
+    while(dot(coords,coords)<=maxDot && iter < maxIteration)
     {    
         if((cFractal & 1) == 1)
             coords = mandelbrot(coords,C );
@@ -111,9 +111,10 @@ vec4 fractal(vec2 C)
             coords = Eye(coords,C ); 
         iter++;
     } 
+
     if(coords ==vec2(6.9,420)) //To skip the main bulb or any other similar things
-        iter = maxIter;
-    return GetColor(C,float(iter) , float(maxIter));
+        iter = maxIteration;
+    return GetColor(C,float(iter) , float(maxIteration));
 }
 void main( )
 {   
